@@ -254,7 +254,7 @@ fi
 java -cp $classpath ch.dvbern.lib.update.Launcher
 ```
 
-In the patch (vaudtax-2023--PATCHED) I made, the script checks which operating system is being used, and sets the libWebKitFile variable according to the directory to be used.
+In the [patch](https://github.com/SunL0w/PATCH-02.04.2024--LINUX-VaudTax_2023) ([vaudtax-2023--PATCHED](https://github.com/SunL0w/PATCH-02.04.2024--LINUX-VaudTax_2023/blob/main/vaudtax-2023--PATCHED)) I made, the script checks which operating system is being used, and sets the libWebKitFile variable according to the directory to be used.
 
 ___
 
