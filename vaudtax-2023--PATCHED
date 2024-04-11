@@ -1,0 +1,97 @@
+#!/bin/bash
+# This script starts the application on Linux (like .exe in windows)
+
+# FIXED (FOR FEDORA) ON 02.04.2024 - BY DIND THIBAULT
+<<Block_comment
+=================================================================================================
+The patch author :				Dind Thibault
+-------------------------------------------------------------------------------------------------
+Suitable for :					Ubuntu, Debian, Fedora, RHEL, CentOS
+-------------------------------------------------------------------------------------------------
+OS TESTED :					Fedora, Ubuntu
+-------------------------------------------------------------------------------------------------
+Fix's date :					02.04.2024
+-------------------------------------------------------------------------------------------------
+Description of the fix :		
+In the script, the paths (for LibWebKit2Gtk-4.0) were exclusively for Ubuntu.
+
+I've added the /usr/lib64 paths for Fedora, And I've modified the script so that it checks the 
+operating system, and adapts the execution accordingly.
+
+I have updated the error "LibWebKit2Gtk-4.0 Does not exist." with information for Fedora/RHEL OS.
+=================================================================================================
+Block_comment
+
+
+# Unset OS Java-Paths
+unset JAVA_HOME
+unset JDK_HOME
+
+export PATH="$(dirname "$0")/jre/bin:$PATH"
+
+JAVA_NOT_FOUND_MSG="Aucun interpréteur Java n'a pu être trouvé sur la ligne de commande.
+Merci d'installer Java à l'aide du gestionnaire de paquet de votre distribution,
+ou sur http://www.java.com/fr/download"
+
+classpath='lib/dvbern-lib-update.jar:lib/cryptutil.jar:lib/jaxb-api.jar:lib/activation.jar:lib/jaxb-impl.jar'
+
+if [ ! -f ///$classpath ] ; then
+	cd "$(dirname "$0")"
+else
+	cd //
+fi
+
+type java &> /dev/null
+if [ "$?" -ne "0" ] ; then
+        echo $JAVA_NOT_FOUND_MSG
+        which zenity &> /dev/null && zenity --no-wrap --no-markup --warning --window-icon=error --text="$JAVA_NOT_FOUND_MSG"
+        exit 1
+fi
+
+# Retrieve the name of the operating system used, and store it in the version_id variable
+version_id=$(grep "^ID=" /etc/os-release | cut -d '=' -f2 | tr -d '"')
+
+case "$version_id" in
+	fedora|rhel|centos)
+		case "$(uname -i)" in
+			i686|x86)
+				libWebKitFile="/usr/lib32/libwebkit2gtk-4.0.so.37" # PATH CORRECTION
+				MY_LIBPATH="$(pwd)/lib/ubuntu/usr/lib/i386-linux-gnu"
+			;;
+			*)
+				libWebKitFile="/usr/lib64/libwebkit2gtk-4.0.so.37" # PATH CORRECTION
+				MY_LIBPATH="$(pwd)/lib/ubuntu/usr/lib/x86_64-linux-gnu"
+			;;
+		esac
+	;;
+	ubuntu|debian)
+		case "$(uname -i)" in
+			i686|x86)
+				libWebKitFile="/usr/lib/i386-linux-gnu/libwebkit2gtk-4.0.so.37"
+				MY_LIBPATH="$(pwd)/lib/ubuntu/usr/lib/i386-linux-gnu"
+			;;
+			*)
+				libWebKitFile="/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.0.so.37"
+				MY_LIBPATH="$(pwd)/lib/ubuntu/usr/lib/x86_64-linux-gnu"
+			;;
+		esac
+	;;
+	*)
+		echo "ERROR: Unsupported operating system."
+		exit 1
+	;;
+esac
+
+if [ ! -f "${libWebKitFile}" ] ; then
+		echo "LibWebKit2Gtk-4.0 Does not exist. Add it."
+
+        export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${MY_LIBPATH}"
+        echo "The LibWebKit2Gtk library path is $LD_LIBRARY_PATH"
+        ls $MY_LIBPATH
+
+        echo "If it is still not working, try: sudo apt-get install libwebkit2gtk-4.0-37 	<[ON UBUNTU/DEBIAN]"	# MODIFIED
+	echo "Or, try: sudo dnf install webkit2gtk4.0 						<[ON FEDORA/RHEL]"	# ADDED
+fi
+
+java -cp $classpath ch.dvbern.lib.update.Launcher
+
