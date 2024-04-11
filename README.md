@@ -186,7 +186,7 @@ The complete path is therefore :
 I just changed the path of the "libWebKitFile" variable from :
 
 ```plaintext
-/usr/lib64/libwebkit2gtk-4.0.so.37
+/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.0.so.37
 ```
 
 to :
@@ -201,7 +201,7 @@ to :
 #!/bin/bash
 # This script starts the application on Linux (like .exe in windows)
 
-# FIXED (FOR FEDORA) ON 02.04.2024 - BY DIND THIBAULT
+# FIXED (FOR FEDORA) ON 02.04.2024
 
 # Unset OS Java-Paths
 unset JAVA_HOME
