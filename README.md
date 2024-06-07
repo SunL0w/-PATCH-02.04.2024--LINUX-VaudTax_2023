@@ -163,7 +163,7 @@ echo "LibWebKit2Gtk-4.0 Does not exist. Add it." #                    <= Yes, si
 ┌=[SunL0w@7321ACS300]:[~/Dev/VaudTax/VaudTax_2023]
 └=>$ ./vaudtax-2023
 LibWebKit2Gtk-4.0 Does not exist. Add it.
-The LibWebKit2Gtk library path is :/home/sunlow/Documents/01-FINANCES/04-IMPOTS/01-VaudTax/VaudTax_2023/lib/ubuntu/usr/lib/x86_64-linux-gnu
+The LibWebKit2Gtk library path is :/home/sunlow/Dev/VaudTax_2023/lib/ubuntu/usr/lib/x86_64-linux-gnu
 libwebkit2gtk-4.0.so.37  libwebkit2gtk-4.0.so.37.53.4  webkit2gtk-4.0
 If it is still not working, try: sudo apt-get install libwebkit2gtk-4.0-37
 ```
